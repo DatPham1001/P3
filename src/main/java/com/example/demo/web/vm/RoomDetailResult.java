@@ -17,14 +17,17 @@ public class RoomDetailResult {
     private RoomType roomType;
     private String description;
     private Integer width;
+    private String url;
     private Integer length;
     private Integer height;
-    private List<Device> devices;
+    private Device device;
     private RoomStats roomStats;
+    private List<RoomStats> roomStatsList;
 
     @Getter
     @Setter
     public static class RoomStats {
+        private Integer hour;
         private Integer temp;
         private Integer humidity;
         private Integer co;
@@ -32,6 +35,7 @@ public class RoomDetailResult {
 
     public static final class RoomDetailResultBuilder {
         private String name;
+        private String url;
         private RoomType roomType;
         private String description;
         private Integer width;
@@ -57,6 +61,10 @@ public class RoomDetailResult {
 
         public RoomDetailResultBuilder withDescription(String description) {
             this.description = description;
+            return this;
+        }
+        public RoomDetailResultBuilder withUrl(String url) {
+            this.url = url;
             return this;
         }
 

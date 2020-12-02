@@ -16,6 +16,7 @@ public class RoomStatsResult {
     private RoomType roomType;
     private String description;
     private Integer width;
+    private String url;
     private Integer length;
     private Integer height;
     private RoomStats roomStats;

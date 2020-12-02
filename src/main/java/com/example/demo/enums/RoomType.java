@@ -1,6 +1,12 @@
 package com.example.demo.enums;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public enum RoomType {
+    @JsonProperty("Laboratory")
     LABORATORY,
-    OFFICE
+    @JsonProperty("Office")
+    OFFICE,
+    @JsonProperty("Accommodation")
+    ACCOMMODATION
 }

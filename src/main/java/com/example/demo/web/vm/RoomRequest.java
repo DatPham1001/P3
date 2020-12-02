@@ -14,5 +14,5 @@ public class RoomRequest {
     private Integer height;
     private String description;
     private RoomType roomType;
-
+    private String url;
 }

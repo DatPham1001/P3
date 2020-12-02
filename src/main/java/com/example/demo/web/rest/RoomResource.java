@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/room")
+@CrossOrigin("*")
 public class RoomResource {
     private final RoomService roomService;
 

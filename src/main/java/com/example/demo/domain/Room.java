@@ -17,6 +17,7 @@ public class Room extends AbstractAuditingEntity {
     private String name;
     @Column(name = "room_type")
     private RoomType roomType;
+    private String url;
     private String description;
     private Integer width;
     private Integer length;
@@ -27,6 +28,7 @@ public class Room extends AbstractAuditingEntity {
     public static final class RoomBuilder {
         private String name;
         private RoomType roomType;
+        private String url;
         private String description;
         private Integer width;
         private Integer length;
@@ -46,6 +48,11 @@ public class Room extends AbstractAuditingEntity {
 
         public RoomBuilder withRoomType(RoomType roomType) {
             this.roomType = roomType;
+            return this;
+        }
+
+        public RoomBuilder withUrl(String url) {
+            this.url = url;
             return this;
         }
 
@@ -73,6 +80,7 @@ public class Room extends AbstractAuditingEntity {
             Room room = new Room();
             room.setName(name);
             room.setRoomType(roomType);
+            room.setUrl(url);
             room.setDescription(description);
             room.setWidth(width);
             room.setLength(length);
