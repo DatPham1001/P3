@@ -22,5 +22,6 @@ public interface DeviceRepo extends JpaRepository<Device, Integer> {
                               @Param("code") String code,
                               @Param("name") String name, Pageable pageable);
     Device findDeviceByRoomIdAndDeletedFalse(Integer roomId);
+    List<Device> findAllByRoomIdAndDeletedFalse(Integer roomId);
     Device findDeviceByDeviceTypeAndRoomIdAndDeletedFalse(String deviceType,Integer roomId);
 }

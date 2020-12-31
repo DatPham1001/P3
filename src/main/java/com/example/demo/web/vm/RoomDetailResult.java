@@ -20,18 +20,17 @@ public class RoomDetailResult {
     private String url;
     private Integer length;
     private Integer height;
-    private Device device;
-    private RoomStats roomStats;
-    private List<RoomStats> roomStatsList;
+    private List<Device> device;
+    private RoomStats roomStatsList;
 
-    @Getter
-    @Setter
-    public static class RoomStats {
-        private Integer hour;
-        private Integer temp;
-        private Integer humidity;
-        private Integer co;
-    }
+//    @Getter
+//    @Setter
+//    public static class RoomStats {
+//        private Integer hour;
+//        private Integer temp;
+//        private Integer humidity;
+//        private Integer co;
+//    }
 
     public static final class RoomDetailResultBuilder {
         private String name;

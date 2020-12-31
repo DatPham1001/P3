@@ -5,4 +5,5 @@ public interface ReportOM {
     Integer getHumidity();
     Integer getCo();
     Integer getHour();
+    Integer getMinute();
 }

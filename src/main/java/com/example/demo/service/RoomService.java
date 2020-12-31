@@ -1,15 +1,13 @@
 package com.example.demo.service;
 
 
+import com.example.demo.domain.Device;
 import com.example.demo.domain.Room;
 import com.example.demo.enums.DeviceType;
 import com.example.demo.repo.DeviceRepo;
 import com.example.demo.repo.ReportRepo;
 import com.example.demo.repo.RoomRepo;
-import com.example.demo.web.vm.ReportOM;
-import com.example.demo.web.vm.RoomDetailResult;
-import com.example.demo.web.vm.RoomRequest;
-import com.example.demo.web.vm.RoomStatsResult;
+import com.example.demo.web.vm.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +32,9 @@ public class RoomService {
     }
 
     public Room create(RoomRequest roomRequest) {
-
+        if(roomRequest.getDescription() == null){
+            roomRequest.setDescription("Không có mô tả");
+        }
         Room room = Room.RoomBuilder
                 .aRoom()
                 .withName(roomRequest.getName())
@@ -87,53 +87,58 @@ public class RoomService {
     }
 
     public RoomDetailResult getById(Integer id) {
-        var device = deviceRepo.findDeviceByRoomIdAndDeletedFalse(id);
+        var devices = deviceRepo.findAllByRoomIdAndDeletedFalse(id);
         LocalDateTime datetime = LocalDateTime.now();
         String time = DateTimeFormatter.ofPattern("yyyy-MM-dd").format(datetime);
-        var reports = reportRepo.getReportOfDate(time);
         var room = roomRepo.findById(id).get();
         var result = new RoomDetailResult();
         result.setName(room.getName());
-        if (!room.getDescription().isBlank()) {
-            result.setDescription(room.getDescription());
-        } else result.setDescription("Không có mô tả");
+        result.setDescription(room.getDescription());
         result.setWidth(room.getWidth());
         result.setHeight(room.getHeight());
         result.setLength(room.getLength());
         result.setUrl(room.getUrl());
         result.setRoomType(room.getRoomType());
-        result.setRoomStats(buildRoomDetailStats(room.getId()));
-        result.setDevice(device);
-        List<RoomDetailResult.RoomStats> stats = new ArrayList<>();
-        for (ReportOM report : reports) {
-            RoomDetailResult.RoomStats stat = new RoomDetailResult.RoomStats();
-            stat.setTemp(report.getTemperature());
-            stat.setHour(report.getHour());
-            stat.setHumidity(report.getHumidity());
-            stat.setCo(report.getCo());
-            stats.add(stat);
+//        result.setRoomStats(buildRoomDetailStats(room.getId()));
+        result.setDevice(devices);
+        var arduinoDevice =
+                devices.stream().filter(device -> device.getDeviceType().equals("ADRUINO")).findFirst().orElse(null);
+//        List<RoomStats> stats = new ArrayList<>();
+        if(arduinoDevice != null){
+            var reports = reportRepo.getReportForDiagramInMinutes("2020-11-30",arduinoDevice.getId());
+            RoomStats stat = new RoomStats();
+            List<Integer> temps = new ArrayList<>();
+            List<Integer> hums = new ArrayList<>();
+            List<String> times = new ArrayList<>();
+            for (ReportOM report : reports) {
+                temps.add(report.getTemperature());
+                hums.add(report.getHumidity());
+                times.add(report.getHour() + ":" + report.getMinute());
+            }
+            stat.setTemp(temps);
+            stat.setHumidity(hums);
+            stat.setTime(times);
+            result.setRoomStatsList(stat);
         }
-        result.setRoomStatsList(stats);
         return result;
     }
-
-    private RoomDetailResult.RoomStats buildRoomDetailStats(Integer roomId) {
-        var stats = new RoomDetailResult.RoomStats();
-        var device = deviceRepo.findDeviceByDeviceTypeAndRoomIdAndDeletedFalse(String.valueOf(DeviceType.ADRUINO), roomId);
-        if (device != null) {
-            var report = reportRepo.findTopByDeviceId(device.getId());
-            if (report != null) {
-                stats.setTemp(report.getTemperature());
-                stats.setHumidity(report.getHumidity());
-                stats.setCo(report.getCoConcentration());
-            } else {
-                stats.setTemp(0);
-                stats.setHumidity(0);
-                stats.setCo(0);
-            }
-        }
-        return stats;
-    }
+//    private RoomDetailResult.RoomStats buildRoomDetailStats(Integer roomId) {
+//        var stats = new RoomDetailResult.RoomStats();
+//        var device = deviceRepo.findDeviceByDeviceTypeAndRoomIdAndDeletedFalse(String.valueOf(DeviceType.ADRUINO), roomId);
+//        if (device != null) {
+//            var report = reportRepo.findTopByDeviceId(device.getId());
+//            if (report != null) {
+//                stats.setTemp(report.getTemperature());
+//                stats.setHumidity(report.getHumidity());
+//                stats.setCo(report.getCoConcentration());
+//            } else {
+//                stats.setTemp(0);
+//                stats.setHumidity(0);
+//                stats.setCo(0);
+//            }
+//        }
+//        return stats;
+//    }
 
     public Room update(Integer id, RoomRequest roomRequest) {
         var existed = roomRepo.findById(id).get();

@@ -22,4 +22,9 @@ public class ReportResource {
         var report = reportService.getReportByRoomId(roomId);
         return ResponseEntity.ok().body(report);
     }
+    @GetMapping("/graphs/{roomId}")
+    public ResponseEntity<?> getReportsForDiagram(@PathVariable Integer roomId){
+        var reports  = reportService.getReportForDiagramInMinutes(roomId);
+        return ResponseEntity.ok().body(reports);
+    }
 }

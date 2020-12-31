@@ -23,5 +23,14 @@ public interface ReportRepo extends JpaRepository<Report, Integer> {
             "group by hour\n" +
             "order by hour ASC\n", nativeQuery = true)
     List<ReportOM> getReportOfDate(@Param("date") String date);
-//    '2020-11-26'
+//    '2020-11-30'
+    @Query(value = "select temperature,humidity,co_concentration co,minute(r.created_date) minute,hour(r.created_date) hour\n" +
+            "    from report r \n" +
+            "    where DATE(created_date) = :date \n" +
+            "    and device_id = :deviceId \n" +
+            "    group by minute \n" +
+            "    order by minute ASC \n" +
+            "    limit 5 ",nativeQuery = true)
+    List<ReportOM> getReportForDiagramInMinutes(@Param("date") String date,@Param("deviceId") Integer deviceId);
+
 }
