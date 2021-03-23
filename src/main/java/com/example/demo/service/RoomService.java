@@ -72,7 +72,7 @@ public class RoomService {
         var stats = new RoomStatsResult.RoomStats();
         var device = deviceRepo.findDeviceByDeviceTypeAndRoomIdAndDeletedFalse(String.valueOf(DeviceType.ADRUINO), roomId);
         if (device != null) {
-            var report = reportRepo.findTopByDeviceId(device.getId());
+            var report = reportRepo.findTopByDeviceCode(device.getCode());
             if (report != null) {
                 stats.setTemp(report.getTemperature());
                 stats.setHumidity(report.getHumidity());
@@ -105,7 +105,7 @@ public class RoomService {
                 devices.stream().filter(device -> device.getDeviceType().equals("ADRUINO")).findFirst().orElse(null);
 //        List<RoomStats> stats = new ArrayList<>();
         if(arduinoDevice != null){
-            var reports = reportRepo.getReportForDiagramInMinutes("2020-11-30",arduinoDevice.getId());
+            var reports = reportRepo.getReportForDiagramInMinutes("2020-11-30",arduinoDevice.getCode());
             RoomStats stat = new RoomStats();
             List<Integer> temps = new ArrayList<>();
             List<Integer> hums = new ArrayList<>();
@@ -155,6 +155,7 @@ public class RoomService {
     public Room delete(Integer id) {
         var existed = roomRepo.findById(id).get();
         existed.setDeleted(true);
+        roomRepo.save(existed);
         return existed;
     }
 

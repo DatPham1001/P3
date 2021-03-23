@@ -13,7 +13,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/device")
-@CrossOrigin("*")
+@CrossOrigin("http://localhost:3000")
 public class DeviceResource {
     private final DeviceService deviceService;
 

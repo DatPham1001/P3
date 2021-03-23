@@ -5,6 +5,7 @@ import com.example.demo.enums.DeviceType;
 import com.example.demo.repo.DeviceRepo;
 import com.example.demo.repo.ReportRepo;
 import com.example.demo.repo.RoomRepo;
+import com.example.demo.web.vm.ReportIM;
 import com.example.demo.web.vm.ReportOM;
 import com.example.demo.web.vm.RoomStats;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,12 @@ public class ReportService {
         this.deviceRepo = deviceRepo;
     }
 
-    public Report create(Report report) {
+    public Report create(ReportIM reportIM) {
+        Report report = new Report();
+        report.setDeviceCode("ARDUINO1");
+        report.setTemperature(reportIM.getTemp());
+        report.setHumidity(reportIM.getHum());
+        report.setCoConcentration(reportIM.getCo());
         var reportResult = reportRepo.save(report);
         return reportResult;
     }
@@ -36,7 +42,7 @@ public class ReportService {
     public List<Report> getReportByRoomId(Integer roomId) {
         var device = deviceRepo.findDeviceByRoomIdAndDeletedFalse(roomId);
         if (device.getDeviceType().equals("ADRUINO")) {
-            var reports = reportRepo.findAllByDeviceId(device.getId());
+            var reports = reportRepo.findAllByDeviceCode(device.getCode());
             return reports;
         }
         return null;
@@ -47,12 +53,12 @@ public class ReportService {
     }
     public Report getLastReport(Integer roomId){
         var device = deviceRepo.findDeviceByDeviceTypeAndRoomIdAndDeletedFalse(String.valueOf(DeviceType.ADRUINO), roomId);
-        var lastReport = reportRepo.findTopByDeviceId(device.getId());
+        var lastReport = reportRepo.findTopByDeviceCode(device.getCode());
         return lastReport;
     }
     public List<ReportOM> getReportForDiagramInMinutes(Integer roomId){
         var device = deviceRepo.findDeviceByRoomIdAndDeletedFalse(roomId);
-        var reports = reportRepo.getReportForDiagramInMinutes("2020-11-30",device.getId());
+        var reports = reportRepo.getReportForDiagramInMinutes("2020-11-30",device.getCode());
         return reports;
     }
 

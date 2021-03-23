@@ -11,9 +11,9 @@ import java.util.List;
 
 @Repository
 public interface ReportRepo extends JpaRepository<Report, Integer> {
-    List<Report> findAllByDeviceId(Integer deviceId);
+    List<Report> findAllByDeviceCode(String deviceCode);
 
-    Report findTopByDeviceId(Integer deviceId);
+    Report findTopByDeviceCode(String deviceCode);
 
     @Query(value = "SELECT * FROM report WHERE device_id = :device_id AND created_date >= :date", nativeQuery = true)
     List<Report> getReports(@Param("device_id") Integer deviceId, @Param("date") String date);
@@ -27,10 +27,10 @@ public interface ReportRepo extends JpaRepository<Report, Integer> {
     @Query(value = "select temperature,humidity,co_concentration co,minute(r.created_date) minute,hour(r.created_date) hour\n" +
             "    from report r \n" +
             "    where DATE(created_date) = :date \n" +
-            "    and device_id = :deviceId \n" +
+            "    and device_code LIKE :deviceCode \n" +
             "    group by minute \n" +
             "    order by minute ASC \n" +
             "    limit 5 ",nativeQuery = true)
-    List<ReportOM> getReportForDiagramInMinutes(@Param("date") String date,@Param("deviceId") Integer deviceId);
+    List<ReportOM> getReportForDiagramInMinutes(@Param("date") String date,@Param("deviceCode") String deviceCode);
 
 }

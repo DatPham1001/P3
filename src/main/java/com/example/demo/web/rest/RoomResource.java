@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/room")
-@CrossOrigin("*")
+@CrossOrigin("http://localhost:3000")
 public class RoomResource {
     private final RoomService roomService;
 
@@ -27,7 +27,10 @@ public class RoomResource {
         var room = roomService.create(roomRequest);
         return ResponseEntity.ok().body(room);
     }
-
+    @GetMapping("/hello")
+    public String get(){
+        return "Hello";
+    }
     @GetMapping
     public ResponseEntity<?> getRooms(
             @RequestParam Optional<Integer> page,

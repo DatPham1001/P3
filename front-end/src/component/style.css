@@ -1,0 +1,32 @@
+.add-btn{
+    text-align: right;
+}
+.text-input{
+    width: 90%;
+    
+}
+.upload-img-container{
+    width: 90%;
+}
+.image-responsive {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    padding: 3px;
+    border-width: 10px;
+    border-radius: 10px;
+}
+.image-responsive-room-detail {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+.upload-img-container {
+    width: 70%;
+    margin: 10px 0 20px 20px;
+    padding: 20px 15px 15px 15px;
+}
+.img-room-container{
+    width: 100%;
+    /* margin: 10px 0 20px 20px; */
+}

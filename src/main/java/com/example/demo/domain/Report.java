@@ -1,16 +1,21 @@
 package com.example.demo.domain;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "report")
 public class Report extends AbstractAuditingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "device_id")
-    private Integer deviceId;
+    @Column(name = "device_code")
+    private String deviceCode;
     private Integer humidity;
     private Integer temperature;
     private Integer coConcentration;
@@ -31,13 +36,6 @@ public class Report extends AbstractAuditingEntity {
         this.id = id;
     }
 
-    public Integer getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(Integer deviceId) {
-        this.deviceId = deviceId;
-    }
 
     public Integer getTemperature() {
         return temperature;
